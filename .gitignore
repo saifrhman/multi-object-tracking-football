@@ -1,0 +1,34 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.env
+
+# ── Data (videos are large — track only .gitkeep placeholders) ───────────────
+data/input/*.mp4
+data/input/*.avi
+data/input/*.mkv
+data/output/*.mp4
+data/output/*.avi
+data/output/*.csv
+
+# ── Model weights ─────────────────────────────────────────────────────────────
+models/*.pt
+models/*.pb
+models/*.onnx
+*.pt
+*.pb
+
+# ── IDE / OS ──────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/

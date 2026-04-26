@@ -1,0 +1,64 @@
+# ─────────────────────────────────────────────
+# Football Player Detection & Tracking Config
+# ─────────────────────────────────────────────
+
+video:
+  input_path: "data/input/match.mp4"
+  output_path: "data/output/tracked.mp4"
+  # Target resolution fed to the model (width x height).
+  # Smaller = faster; larger = more accurate on small players.
+  frame_width: 1280
+  frame_height: 720
+  # Process every Nth frame (1 = every frame, 2 = every other frame, …)
+  # Colab T4: frame_skip 1 works fine; use 2 only if Drive I/O is bottlenecking
+  frame_skip: 1
+
+model:
+  # YOLOv8 weights: n/s/m/l/x  (nano → xlarge).
+  # yolov8m.pt is the best speed/accuracy trade-off for Colab T4.
+  weights: "yolov8m.pt"
+  # Confidence threshold — lower catches more but adds false positives
+  confidence: 0.35
+  # IoU threshold for NMS inside YOLOv8
+  iou: 0.45
+  # COCO class id for 'person' is 0
+  target_classes: [0]
+  # Set to "cuda" for GPU, "cpu" as fallback
+  device: "cuda"
+  # Inference image size (must be multiple of 32).
+  # 640 runs ~2x faster than 1280 on T4 with minimal quality loss at pitch-level view.
+  imgsz: 640
+
+tracker:
+  # Maximum cosine distance for Re-ID appearance matching
+  max_cosine_distance: 0.4
+  # Maximum frames a track is kept alive without a matching detection
+  max_age: 30
+  # Minimum hits before a track is confirmed and shown
+  n_init: 3
+  # Minimum detection confidence passed to DeepSORT
+  min_confidence: 0.35
+  # Non-maximum suppression threshold on tracker side
+  nms_max_overlap: 1.0
+  # Path to the MobileNet Re-ID feature extractor weights
+  reid_model_path: "models/mars-small128.pb"
+
+visualization:
+  # Draw bounding boxes
+  show_boxes: true
+  # Draw player ID labels
+  show_ids: true
+  # Draw trajectory tail (number of past positions to draw)
+  trail_length: 30
+  # Thickness of bounding box lines (pixels)
+  box_thickness: 2
+  # Font scale for ID labels
+  font_scale: 0.6
+
+output:
+  # Frames-per-second for the output video (0 = match input FPS)
+  fps: 0
+  codec: "mp4v"
+  # Save raw detection CSV (frame_id, track_id, x1, y1, x2, y2, conf)
+  save_csv: true
+  csv_path: "data/output/detections.csv"
